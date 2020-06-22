@@ -3,30 +3,49 @@
 const calendar = document.querySelector('#calendar');
 
 function calendarTable(year, month, element) {
-  let table = `<table><tr><th>пн</th><th>вт</th><th>ср</th>
-                <th>чт</th><th>пт</th><th>сб</th><th>нд</th></tr>`;
-  const day = new Date(year, month).getDay() || 7;
-  const lastDay = new Date(year, month + 1, 0).getDate();
-  const rows = Math.floor((lastDay - day) / 7) + 1;
+  element.innerHTML = `
+  <table>
+    <thead>
+      <tr>
+        <th>Пн</th>
+        <th>Вт</th>
+        <th>Ср</th>
+        <th>Чт</th>
+        <th>Пт</th>
+        <th>Сб</th>
+        <th>Нд</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+`;
 
-  for (let i = 0, d = 1; i < rows; i++) {
-    let createTr = '<tr>';
+  const firstDay = new Date(year, month - 1, 0).getDay();
+  const lastDay = new Date(year, month, 0).getDate();
+  const daysInMonth = new Date(year, month, 0).getDate();
+  const weeksInMonth = Math.ceil((daysInMonth + firstDay) / 7);
+  const tableBody = document.querySelector('tbody');
 
-    for (let j = 0; j < 7; j++) {
-      let createTd = `<td>`;
-      const numDays = i * 7 + j + 1;
+  for (let i = 0; i < weeksInMonth; i++) {
+    const tr = document.createElement('tr');
 
-      if ((numDays >= day) && (numDays <= lastDay + 1)) {
-        createTd += d++;
-      }
-      createTd += `</td>`;
-      createTr += createTd;
+    tableBody.append(tr);
+
+    for (let j = 1; j <= 7; j++) {
+      const weekDay = document.createElement('td');
+
+      tr.append(weekDay);
     }
-    createTr += '</tr>';
-    table += createTr;
   }
 
-  element.innerHTML = table;
-}
+  let counter = 1;
 
-calendarTable(2020, 5, calendar);
+  for (let i = firstDay; i < lastDay + firstDay; i++) {
+    const td = document.querySelectorAll('td')[i];
+
+    td.textContent = counter;
+    counter++;
+  };
+}
+calendarTable(2020, 2, calendar);
